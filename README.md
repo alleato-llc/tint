@@ -9,7 +9,7 @@ Add Tint as a dependency in your `Package.swift`:
 ```swift
 dependencies: [
     .package(path: "../tint"), // local
-    // or: .package(url: "https://github.com/aalleato/tint.git", from: "0.1.0"),
+    // or: .package(url: "https://github.com/alleato-llc/tint.git", from: "0.1.0"),
 ]
 ```
 
@@ -245,7 +245,7 @@ The `Key` enum covers standard terminal input:
 
 ## Built with Tint
 
-- **[aux](https://github.com/aalleato/aux)** — Terminal music player with library browser, real-time waveform/spectrum visualizers, and multi-format playback via LibAVKit
+- **[aux](https://github.com/alleato-llc/aux)** — Terminal music player with library browser, real-time waveform/spectrum visualizers, and multi-format playback via LibAVKit
 
 ## License
 
