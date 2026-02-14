@@ -48,10 +48,6 @@ app.run(render: { area, buffer in
 - macOS 14+
 - Swift 6.2+
 
-## Architecture
-
-See [docs/architecture.md](docs/architecture.md) for a detailed design overview covering the rendering pipeline, core types, layout system, widget protocol, and terminal abstraction.
-
 ## Widget Catalog
 
 ### Text
@@ -264,6 +260,10 @@ PICKLE_REPORT=1 swift test        # generate HTML report at pickle-report.html
 ```
 
 See [docs/testing/BDD.md](docs/testing/BDD.md) for the full testing guide and [docs/testing/PHILOSOPHY.md](docs/testing/PHILOSOPHY.md) for design decisions.
+
+## Architecture
+
+See [docs/architecture.md](docs/architecture.md) for a detailed design overview covering the rendering pipeline, core types, layout system, widget protocol, and terminal abstraction.
 
 ## Contributing
 
