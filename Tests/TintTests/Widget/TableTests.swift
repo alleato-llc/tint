@@ -1,8 +1,8 @@
-import XCTest
+import Testing
 @testable import Tint
 
-final class TableTests: XCTestCase {
-    func testBasicTable() {
+@Suite struct TableTests {
+    @Test func basicTable() {
         let area = Rect(x: 0, y: 0, width: 30, height: 5)
         var buffer = Buffer(area: area)
         let table = Table(
@@ -24,7 +24,7 @@ final class TableTests: XCTestCase {
         buffer.assertCell(x: 0, y: 2, char: "A")
     }
 
-    func testTableWithSelection() {
+    @Test func tableWithSelection() {
         let area = Rect(x: 0, y: 0, width: 20, height: 5)
         var buffer = Buffer(area: area)
         let table = Table(
@@ -35,10 +35,10 @@ final class TableTests: XCTestCase {
         )
         table.render(area: area, buffer: &buffer)
         // Selected row (index 1) is at y=3 (header=0, sep=1, row0=2, row1=3)
-        XCTAssertEqual(buffer[0, 3].style, Style(fg: .black, bg: .white))
+        #expect(buffer[0, 3].style == Style(fg: .black, bg: .white))
     }
 
-    func testEmptyTable() {
+    @Test func emptyTable() {
         let area = Rect(x: 0, y: 0, width: 20, height: 5)
         var buffer = Buffer(area: area)
         let table = Table(columns: [], rows: [])
@@ -46,7 +46,7 @@ final class TableTests: XCTestCase {
         // Should not crash
     }
 
-    func testHorizontalOffset() {
+    @Test func horizontalOffset() {
         let area = Rect(x: 0, y: 0, width: 20, height: 4)
         var buffer = Buffer(area: area)
         let table = Table(
@@ -55,13 +55,12 @@ final class TableTests: XCTestCase {
             horizontalOffset: 6
         )
         table.render(area: area, buffer: &buffer)
-        // Header "Name" shifted by 6 = "": too short, gone
         // Row "Hello World Long Name" shifted by 6 = "World Long Name"
         let rowText = buffer.textAt(row: 2)
-        XCTAssertTrue(rowText.hasPrefix("World"))
+        #expect(rowText.hasPrefix("World"))
     }
 
-    func testHorizontalOffsetZero() {
+    @Test func horizontalOffsetZero() {
         let area = Rect(x: 0, y: 0, width: 20, height: 4)
         var buffer = Buffer(area: area)
         let table = Table(
@@ -71,12 +70,12 @@ final class TableTests: XCTestCase {
         )
         table.render(area: area, buffer: &buffer)
         let headerText = buffer.textAt(row: 0)
-        XCTAssertTrue(headerText.hasPrefix("Title"))
+        #expect(headerText.hasPrefix("Title"))
         let rowText = buffer.textAt(row: 2)
-        XCTAssertTrue(rowText.hasPrefix("Song"))
+        #expect(rowText.hasPrefix("Song"))
     }
 
-    func testTableColumnWidths() {
+    @Test func tableColumnWidths() {
         let area = Rect(x: 0, y: 0, width: 21, height: 4)
         var buffer = Buffer(area: area)
         let table = Table(
@@ -91,8 +90,8 @@ final class TableTests: XCTestCase {
         table.render(area: area, buffer: &buffer)
         // Header should have all columns
         let headerText = buffer.textAt(row: 0)
-        XCTAssertTrue(headerText.contains("#"))
-        XCTAssertTrue(headerText.contains("Title"))
-        XCTAssertTrue(headerText.contains("Duration"))
+        #expect(headerText.contains("#"))
+        #expect(headerText.contains("Title"))
+        #expect(headerText.contains("Duration"))
     }
 }

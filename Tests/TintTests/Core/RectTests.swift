@@ -1,66 +1,66 @@
-import XCTest
+import Testing
 @testable import Tint
 
-final class RectTests: XCTestCase {
-    func testBasicProperties() {
+@Suite struct RectTests {
+    @Test func basicProperties() {
         let rect = Rect(x: 1, y: 2, width: 10, height: 5)
-        XCTAssertEqual(rect.right, 11)
-        XCTAssertEqual(rect.bottom, 7)
-        XCTAssertEqual(rect.area, 50)
-        XCTAssertFalse(rect.isEmpty)
-        XCTAssertEqual(rect.position, Position(x: 1, y: 2))
-        XCTAssertEqual(rect.size, Size(width: 10, height: 5))
+        #expect(rect.right == 11)
+        #expect(rect.bottom == 7)
+        #expect(rect.area == 50)
+        #expect(!rect.isEmpty)
+        #expect(rect.position == Position(x: 1, y: 2))
+        #expect(rect.size == Size(width: 10, height: 5))
     }
 
-    func testIsEmpty() {
-        XCTAssertTrue(Rect(x: 0, y: 0, width: 0, height: 5).isEmpty)
-        XCTAssertTrue(Rect(x: 0, y: 0, width: 5, height: 0).isEmpty)
-        XCTAssertTrue(Rect.zero.isEmpty)
+    @Test func isEmpty() {
+        #expect(Rect(x: 0, y: 0, width: 0, height: 5).isEmpty)
+        #expect(Rect(x: 0, y: 0, width: 5, height: 0).isEmpty)
+        #expect(Rect.zero.isEmpty)
     }
 
-    func testIntersection() {
+    @Test func intersection() {
         let a = Rect(x: 0, y: 0, width: 10, height: 10)
         let b = Rect(x: 5, y: 5, width: 10, height: 10)
         let inter = a.intersection(b)
-        XCTAssertEqual(inter, Rect(x: 5, y: 5, width: 5, height: 5))
+        #expect(inter == Rect(x: 5, y: 5, width: 5, height: 5))
     }
 
-    func testIntersectionNoOverlap() {
+    @Test func intersectionNoOverlap() {
         let a = Rect(x: 0, y: 0, width: 5, height: 5)
         let b = Rect(x: 10, y: 10, width: 5, height: 5)
         let inter = a.intersection(b)
-        XCTAssertTrue(inter.isEmpty)
+        #expect(inter.isEmpty)
     }
 
-    func testContains() {
+    @Test func contains() {
         let rect = Rect(x: 0, y: 0, width: 10, height: 10)
-        XCTAssertTrue(rect.contains(Position(x: 0, y: 0)))
-        XCTAssertTrue(rect.contains(Position(x: 9, y: 9)))
-        XCTAssertFalse(rect.contains(Position(x: 10, y: 0)))
-        XCTAssertFalse(rect.contains(Position(x: 0, y: 10)))
-        XCTAssertFalse(rect.contains(Position(x: -1, y: 0)))
+        #expect(rect.contains(Position(x: 0, y: 0)))
+        #expect(rect.contains(Position(x: 9, y: 9)))
+        #expect(!rect.contains(Position(x: 10, y: 0)))
+        #expect(!rect.contains(Position(x: 0, y: 10)))
+        #expect(!rect.contains(Position(x: -1, y: 0)))
     }
 
-    func testInset() {
+    @Test func inset() {
         let rect = Rect(x: 0, y: 0, width: 20, height: 10)
         let inset = rect.inset(top: 1, right: 2, bottom: 1, left: 2)
-        XCTAssertEqual(inset, Rect(x: 2, y: 1, width: 16, height: 8))
+        #expect(inset == Rect(x: 2, y: 1, width: 16, height: 8))
     }
 
-    func testInner() {
+    @Test func inner() {
         let rect = Rect(x: 0, y: 0, width: 10, height: 5)
         let inner = rect.inner
-        XCTAssertEqual(inner, Rect(x: 1, y: 1, width: 8, height: 3))
+        #expect(inner == Rect(x: 1, y: 1, width: 8, height: 3))
     }
 
-    func testInsetClamps() {
+    @Test func insetClamps() {
         let rect = Rect(x: 0, y: 0, width: 2, height: 2)
         let inset = rect.inset(top: 5, right: 5, bottom: 5, left: 5)
-        XCTAssertEqual(inset.width, 0)
-        XCTAssertEqual(inset.height, 0)
+        #expect(inset.width == 0)
+        #expect(inset.height == 0)
     }
 
-    func testSizeZero() {
-        XCTAssertEqual(Size.zero, Size(width: 0, height: 0))
+    @Test func sizeZero() {
+        #expect(Size.zero == Size(width: 0, height: 0))
     }
 }

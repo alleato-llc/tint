@@ -1,8 +1,8 @@
-import XCTest
+import Testing
 @testable import Tint
 
-final class BlockTests: XCTestCase {
-    func testBorderRendering() {
+@Suite struct BlockTests {
+    @Test func borderRendering() {
         let area = Rect(x: 0, y: 0, width: 5, height: 3)
         var buffer = Buffer(area: area)
         let block = Block(borderStyle: .plain)
@@ -15,7 +15,7 @@ final class BlockTests: XCTestCase {
         buffer.assertCell(x: 0, y: 1, char: "│")
     }
 
-    func testRoundedBorder() {
+    @Test func roundedBorder() {
         let area = Rect(x: 0, y: 0, width: 5, height: 3)
         var buffer = Buffer(area: area)
         let block = Block(borderStyle: .rounded)
@@ -26,7 +26,7 @@ final class BlockTests: XCTestCase {
         buffer.assertCell(x: 4, y: 2, char: "╯")
     }
 
-    func testTitle() {
+    @Test func title() {
         let area = Rect(x: 0, y: 0, width: 20, height: 3)
         var buffer = Buffer(area: area)
         let block = Block(title: "Test", borderStyle: .plain)
@@ -38,7 +38,7 @@ final class BlockTests: XCTestCase {
         buffer.assertCell(x: 6, y: 0, char: "t")
     }
 
-    func testChildRendering() {
+    @Test func childRendering() {
         let area = Rect(x: 0, y: 0, width: 10, height: 3)
         var buffer = Buffer(area: area)
         let block = Block(borderStyle: .plain)
@@ -49,7 +49,7 @@ final class BlockTests: XCTestCase {
         buffer.assertCell(x: 2, y: 1, char: "i")
     }
 
-    func testDoubleBorder() {
+    @Test func doubleBorder() {
         let area = Rect(x: 0, y: 0, width: 5, height: 3)
         var buffer = Buffer(area: area)
         let block = Block(borderStyle: .double)
@@ -60,7 +60,7 @@ final class BlockTests: XCTestCase {
         buffer.assertCell(x: 0, y: 1, char: "║")
     }
 
-    func testEmptyArea() {
+    @Test func emptyArea() {
         let area = Rect(x: 0, y: 0, width: 0, height: 0)
         var buffer = Buffer(area: area)
         let block = Block()

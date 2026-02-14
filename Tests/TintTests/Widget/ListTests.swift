@@ -1,8 +1,8 @@
-import XCTest
+import Testing
 @testable import Tint
 
-final class ListTests: XCTestCase {
-    func testBasicList() {
+@Suite struct ListTests {
+    @Test func basicList() {
         let area = Rect(x: 0, y: 0, width: 20, height: 3)
         var buffer = Buffer(area: area)
         let list = ListWidget(items: [
@@ -16,7 +16,7 @@ final class ListTests: XCTestCase {
         buffer.assertRow(2, equals: "  Item Three")
     }
 
-    func testListWithSelection() {
+    @Test func listWithSelection() {
         let area = Rect(x: 0, y: 0, width: 20, height: 3)
         var buffer = Buffer(area: area)
         let list = ListWidget(
@@ -28,7 +28,7 @@ final class ListTests: XCTestCase {
         buffer.assertCell(x: 0, y: 1, char: ">")
     }
 
-    func testListScrolling() {
+    @Test func listScrolling() {
         let area = Rect(x: 0, y: 0, width: 20, height: 2)
         var buffer = Buffer(area: area)
         let items = (0..<10).map { ListWidget.Item("Item \($0)") }
@@ -36,10 +36,10 @@ final class ListTests: XCTestCase {
         list.render(area: area, buffer: &buffer)
         // With selection at 8 and only 2 visible rows, should scroll
         let text = buffer.allText()
-        XCTAssertTrue(text.contains { $0.contains("Item 8") })
+        #expect(text.contains { $0.contains("Item 8") })
     }
 
-    func testEmptyList() {
+    @Test func emptyList() {
         let area = Rect(x: 0, y: 0, width: 20, height: 3)
         var buffer = Buffer(area: area)
         let list = ListWidget(items: [])
@@ -48,17 +48,17 @@ final class ListTests: XCTestCase {
         buffer.assertRow(0, equals: "")
     }
 
-    func testListTruncation() {
+    @Test func listTruncation() {
         let area = Rect(x: 0, y: 0, width: 8, height: 1)
         var buffer = Buffer(area: area)
         let list = ListWidget(items: [.init("Very Long Item Name")])
         list.render(area: area, buffer: &buffer)
         // Item text truncated (8 - 2 for padding = 6 chars max)
         let text = buffer.textAt(row: 0)
-        XCTAssertEqual(text.count, 8)
+        #expect(text.count == 8)
     }
 
-    func testHorizontalOffset() {
+    @Test func horizontalOffset() {
         let area = Rect(x: 0, y: 0, width: 12, height: 1)
         var buffer = Buffer(area: area)
         let list = ListWidget(
@@ -70,7 +70,7 @@ final class ListTests: XCTestCase {
         buffer.assertRow(0, equals: "  World Long")
     }
 
-    func testHorizontalOffsetWithSelection() {
+    @Test func horizontalOffsetWithSelection() {
         let area = Rect(x: 0, y: 0, width: 12, height: 1)
         var buffer = Buffer(area: area)
         let list = ListWidget(
@@ -84,7 +84,7 @@ final class ListTests: XCTestCase {
         buffer.assertCell(x: 2, y: 0, char: "W")
     }
 
-    func testHorizontalOffsetZero() {
+    @Test func horizontalOffsetZero() {
         let area = Rect(x: 0, y: 0, width: 20, height: 1)
         var buffer = Buffer(area: area)
         let list = ListWidget(
@@ -95,7 +95,7 @@ final class ListTests: XCTestCase {
         buffer.assertRow(0, equals: "  Short")
     }
 
-    func testHorizontalOffsetBeyondText() {
+    @Test func horizontalOffsetBeyondText() {
         let area = Rect(x: 0, y: 0, width: 20, height: 1)
         var buffer = Buffer(area: area)
         let list = ListWidget(

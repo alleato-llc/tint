@@ -1,18 +1,18 @@
-import XCTest
+import Testing
 @testable import Tint
 
-final class ThemeTests: XCTestCase {
-    func testDefaultThemeProperties() {
+@Suite struct ThemeTests {
+    @Test func defaultThemeProperties() {
         let theme = DefaultTheme()
-        XCTAssertTrue(theme.title.bold)
-        XCTAssertTrue(theme.highlight.bold)
-        XCTAssertTrue(theme.accent.bold)
-        XCTAssertTrue(theme.error.bold)
-        XCTAssertEqual(theme.error.fg, .red)
-        XCTAssertEqual(theme.accent.fg, .cyan)
+        #expect(theme.title.bold)
+        #expect(theme.highlight.bold)
+        #expect(theme.accent.bold)
+        #expect(theme.error.bold)
+        #expect(theme.error.fg == .red)
+        #expect(theme.accent.fg == .cyan)
     }
 
-    func testCustomTheme() {
+    @Test func customTheme() {
         struct DarkTheme: Theme {
             var primary: Style { Style(fg: .white) }
             var secondary: Style { Style(fg: .brightBlack) }
@@ -26,7 +26,7 @@ final class ThemeTests: XCTestCase {
         }
 
         let theme = DarkTheme()
-        XCTAssertEqual(theme.highlight.fg, .yellow)
-        XCTAssertEqual(theme.highlight.bg, .blue)
+        #expect(theme.highlight.fg == .yellow)
+        #expect(theme.highlight.bg == .blue)
     }
 }

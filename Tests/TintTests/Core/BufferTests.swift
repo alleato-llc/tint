@@ -1,29 +1,29 @@
-import XCTest
+import Testing
 @testable import Tint
 
-final class BufferTests: XCTestCase {
-    func testInitialization() {
+@Suite struct BufferTests {
+    @Test func initialization() {
         let area = Rect(x: 0, y: 0, width: 5, height: 3)
         let buffer = Buffer(area: area)
-        XCTAssertEqual(buffer.cells.count, 15)
-        XCTAssertEqual(buffer[0, 0], .empty)
+        #expect(buffer.cells.count == 15)
+        #expect(buffer[0, 0] == .empty)
     }
 
-    func testWriteText() {
+    @Test func writeText() {
         let area = Rect(x: 0, y: 0, width: 10, height: 1)
         var buffer = Buffer(area: area)
         buffer.write("Hello", x: 0, y: 0)
-        XCTAssertEqual(buffer.textAt(row: 0), "Hello     ")
+        #expect(buffer.textAt(row: 0) == "Hello     ")
     }
 
-    func testWriteTruncates() {
+    @Test func writeTruncates() {
         let area = Rect(x: 0, y: 0, width: 5, height: 1)
         var buffer = Buffer(area: area)
         buffer.write("Hello, World!", x: 0, y: 0)
-        XCTAssertEqual(buffer.textAt(row: 0), "Hello")
+        #expect(buffer.textAt(row: 0) == "Hello")
     }
 
-    func testWriteWithOffset() {
+    @Test func writeWithOffset() {
         let area = Rect(x: 0, y: 0, width: 10, height: 1)
         var buffer = Buffer(area: area)
         buffer.write("Hi", x: 3, y: 0)
@@ -31,28 +31,28 @@ final class BufferTests: XCTestCase {
         buffer.assertCell(x: 4, y: 0, char: "i")
     }
 
-    func testFill() {
+    @Test func fill() {
         let area = Rect(x: 0, y: 0, width: 5, height: 3)
         var buffer = Buffer(area: area)
         let cell = Cell(character: "X", style: .default)
         buffer.fill(Rect(x: 1, y: 1, width: 2, height: 1), cell: cell)
-        XCTAssertEqual(buffer[1, 1].character, "X")
-        XCTAssertEqual(buffer[2, 1].character, "X")
-        XCTAssertEqual(buffer[0, 1].character, " ")
+        #expect(buffer[1, 1].character == "X")
+        #expect(buffer[2, 1].character == "X")
+        #expect(buffer[0, 1].character == " ")
     }
 
-    func testSetStyle() {
+    @Test func setStyle() {
         let area = Rect(x: 0, y: 0, width: 5, height: 1)
         var buffer = Buffer(area: area)
         buffer.write("Hello", x: 0, y: 0)
         let style = Style(fg: .red, bold: true)
         buffer.setStyle(Rect(x: 0, y: 0, width: 3, height: 1), style: style)
-        XCTAssertEqual(buffer[0, 0].style, style)
-        XCTAssertEqual(buffer[2, 0].style, style)
-        XCTAssertEqual(buffer[3, 0].style, .default)
+        #expect(buffer[0, 0].style == style)
+        #expect(buffer[2, 0].style == style)
+        #expect(buffer[3, 0].style == .default)
     }
 
-    func testMerge() {
+    @Test func merge() {
         let area1 = Rect(x: 0, y: 0, width: 10, height: 5)
         var buffer1 = Buffer(area: area1)
         buffer1.write("AAAA", x: 0, y: 0)
@@ -62,45 +62,45 @@ final class BufferTests: XCTestCase {
         buffer2.write("BBB", x: 2, y: 0)
 
         buffer1.merge(buffer2)
-        XCTAssertEqual(buffer1[0, 0].character, "A")
-        XCTAssertEqual(buffer1[1, 0].character, "A")
-        XCTAssertEqual(buffer1[2, 0].character, "B")
-        XCTAssertEqual(buffer1[3, 0].character, "B")
-        XCTAssertEqual(buffer1[4, 0].character, "B")
+        #expect(buffer1[0, 0].character == "A")
+        #expect(buffer1[1, 0].character == "A")
+        #expect(buffer1[2, 0].character == "B")
+        #expect(buffer1[3, 0].character == "B")
+        #expect(buffer1[4, 0].character == "B")
     }
 
-    func testReset() {
+    @Test func reset() {
         let area = Rect(x: 0, y: 0, width: 5, height: 1)
         var buffer = Buffer(area: area)
         buffer.write("Hello", x: 0, y: 0)
         buffer.reset()
-        XCTAssertEqual(buffer.textAt(row: 0), "     ")
+        #expect(buffer.textAt(row: 0) == "     ")
     }
 
-    func testAllText() {
+    @Test func allText() {
         let area = Rect(x: 0, y: 0, width: 3, height: 2)
         var buffer = Buffer(area: area)
         buffer.write("AB", x: 0, y: 0)
         buffer.write("CD", x: 0, y: 1)
         let text = buffer.allText()
-        XCTAssertEqual(text, ["AB ", "CD "])
+        #expect(text == ["AB ", "CD "])
     }
 
-    func testOutOfBoundsAccess() {
+    @Test func outOfBoundsAccess() {
         let area = Rect(x: 0, y: 0, width: 5, height: 5)
         var buffer = Buffer(area: area)
         // Writing out of bounds should be silently ignored
         buffer.write("Test", x: -1, y: 0)
         buffer[10, 10] = Cell(character: "X")
         // Reading out of bounds returns empty
-        XCTAssertEqual(buffer[10, 10], .empty)
+        #expect(buffer[10, 10] == .empty)
     }
 
-    func testSubscriptGetSet() {
+    @Test func subscriptGetSet() {
         let area = Rect(x: 0, y: 0, width: 5, height: 5)
         var buffer = Buffer(area: area)
         let cell = Cell(character: "Z", style: Style(fg: .green))
         buffer[2, 3] = cell
-        XCTAssertEqual(buffer[2, 3], cell)
+        #expect(buffer[2, 3] == cell)
     }
 }

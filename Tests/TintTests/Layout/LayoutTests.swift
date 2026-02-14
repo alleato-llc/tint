@@ -1,64 +1,64 @@
-import XCTest
+import Testing
 @testable import Tint
 
-final class LayoutTests: XCTestCase {
-    func testVerticalSplit() {
+@Suite struct LayoutTests {
+    @Test func verticalSplit() {
         let area = Rect(x: 0, y: 0, width: 80, height: 24)
         let layout = Layout(direction: .vertical, constraints: [.fixed(3), .fill, .fixed(1)])
         let rects = layout.split(area)
-        XCTAssertEqual(rects.count, 3)
-        XCTAssertEqual(rects[0], Rect(x: 0, y: 0, width: 80, height: 3))
-        XCTAssertEqual(rects[1], Rect(x: 0, y: 3, width: 80, height: 20))
-        XCTAssertEqual(rects[2], Rect(x: 0, y: 23, width: 80, height: 1))
+        #expect(rects.count == 3)
+        #expect(rects[0] == Rect(x: 0, y: 0, width: 80, height: 3))
+        #expect(rects[1] == Rect(x: 0, y: 3, width: 80, height: 20))
+        #expect(rects[2] == Rect(x: 0, y: 23, width: 80, height: 1))
     }
 
-    func testHorizontalSplit() {
+    @Test func horizontalSplit() {
         let area = Rect(x: 0, y: 0, width: 80, height: 24)
         let layout = Layout(direction: .horizontal, constraints: [.fixed(20), .fill])
         let rects = layout.split(area)
-        XCTAssertEqual(rects.count, 2)
-        XCTAssertEqual(rects[0], Rect(x: 0, y: 0, width: 20, height: 24))
-        XCTAssertEqual(rects[1], Rect(x: 20, y: 0, width: 60, height: 24))
+        #expect(rects.count == 2)
+        #expect(rects[0] == Rect(x: 0, y: 0, width: 20, height: 24))
+        #expect(rects[1] == Rect(x: 20, y: 0, width: 60, height: 24))
     }
 
-    func testPercentageSplit() {
+    @Test func percentageSplit() {
         let area = Rect(x: 0, y: 0, width: 100, height: 10)
         let layout = Layout(direction: .horizontal, constraints: [.percentage(30), .percentage(70)])
         let rects = layout.split(area)
-        XCTAssertEqual(rects[0].width, 30)
-        XCTAssertEqual(rects[1].width, 70)
+        #expect(rects[0].width == 30)
+        #expect(rects[1].width == 70)
     }
 
-    func testMultipleFills() {
+    @Test func multipleFills() {
         let area = Rect(x: 0, y: 0, width: 100, height: 10)
         let layout = Layout(direction: .horizontal, constraints: [.fixed(10), .fill, .fill])
         let rects = layout.split(area)
-        XCTAssertEqual(rects[0].width, 10)
+        #expect(rects[0].width == 10)
         // 90 remaining split between 2 fills: 45 each
-        XCTAssertEqual(rects[1].width, 45)
-        XCTAssertEqual(rects[2].width, 45)
+        #expect(rects[1].width == 45)
+        #expect(rects[2].width == 45)
     }
 
-    func testMinConstraint() {
+    @Test func minConstraint() {
         let area = Rect(x: 0, y: 0, width: 100, height: 10)
         let layout = Layout(direction: .horizontal, constraints: [.min(20), .fill])
         let rects = layout.split(area)
         // min(20) gets 20 initially + some fill share
-        XCTAssertGreaterThanOrEqual(rects[0].width, 20)
+        #expect(rects[0].width >= 20)
     }
 
-    func testEmptyConstraints() {
+    @Test func emptyConstraints() {
         let area = Rect(x: 0, y: 0, width: 80, height: 24)
         let layout = Layout(direction: .vertical, constraints: [])
         let rects = layout.split(area)
-        XCTAssertTrue(rects.isEmpty)
+        #expect(rects.isEmpty)
     }
 
-    func testSingleFill() {
+    @Test func singleFill() {
         let area = Rect(x: 0, y: 0, width: 80, height: 24)
         let layout = Layout(direction: .vertical, constraints: [.fill])
         let rects = layout.split(area)
-        XCTAssertEqual(rects.count, 1)
-        XCTAssertEqual(rects[0], area)
+        #expect(rects.count == 1)
+        #expect(rects[0] == area)
     }
 }

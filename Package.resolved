@@ -1,0 +1,15 @@
+{
+  "originHash" : "a414e0789dec185eb11a57735460b01c0edeba395f062e65d3df6eba3efebbaa",
+  "pins" : [
+    {
+      "identity" : "pickle-kit",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/alleato-llc/pickle-kit.git",
+      "state" : {
+        "branch" : "main",
+        "revision" : "cf3f4e4bc78c79933e0806e1086f3e05a54f1d1d"
+      }
+    }
+  ],
+  "version" : 3
+}

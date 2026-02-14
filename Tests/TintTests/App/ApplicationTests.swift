@@ -1,20 +1,20 @@
-import XCTest
+import Testing
 @testable import Tint
 
-final class ApplicationTests: XCTestCase {
-    func testApplicationInit() {
+@Suite struct ApplicationTests {
+    @Test func applicationInit() {
         let backend = MockTerminalBackend(width: 80, height: 24)
         let app = Application(backend: backend)
-        XCTAssertEqual(app.terminalSize, Size(width: 80, height: 24))
+        #expect(app.terminalSize == Size(width: 80, height: 24))
     }
 
-    func testDefaultTheme() {
+    @Test func defaultTheme() {
         let backend = MockTerminalBackend()
         let app = Application(backend: backend)
-        XCTAssertTrue(app.theme is DefaultTheme)
+        #expect(app.theme is DefaultTheme)
     }
 
-    func testCustomTheme() {
+    @Test func customTheme() {
         struct TestTheme: Theme {
             var primary: Style { Style(fg: .green) }
             var secondary: Style { .default }
@@ -29,32 +29,32 @@ final class ApplicationTests: XCTestCase {
 
         let backend = MockTerminalBackend()
         let app = Application(backend: backend, theme: TestTheme())
-        XCTAssertTrue(app.theme is TestTheme)
+        #expect(app.theme is TestTheme)
     }
 
-    func testMockBackendTracking() {
+    @Test func mockBackendTracking() {
         let backend = MockTerminalBackend(width: 40, height: 10)
 
-        XCTAssertFalse(backend.rawModeEnabled)
+        #expect(!backend.rawModeEnabled)
         backend.enableRawMode()
-        XCTAssertTrue(backend.rawModeEnabled)
+        #expect(backend.rawModeEnabled)
         backend.disableRawMode()
-        XCTAssertFalse(backend.rawModeEnabled)
+        #expect(!backend.rawModeEnabled)
 
-        XCTAssertFalse(backend.alternateScreenActive)
+        #expect(!backend.alternateScreenActive)
         backend.enterAlternateScreen()
-        XCTAssertTrue(backend.alternateScreenActive)
+        #expect(backend.alternateScreenActive)
 
-        XCTAssertFalse(backend.cursorHidden)
+        #expect(!backend.cursorHidden)
         backend.hideCursor()
-        XCTAssertTrue(backend.cursorHidden)
+        #expect(backend.cursorHidden)
 
         let area = Rect(x: 0, y: 0, width: 40, height: 10)
         let buffer = Buffer(area: area)
         backend.draw(buffer)
-        XCTAssertEqual(backend.drawCalls.count, 1)
+        #expect(backend.drawCalls.count == 1)
 
         backend.flush()
-        XCTAssertEqual(backend.flushCount, 1)
+        #expect(backend.flushCount == 1)
     }
 }

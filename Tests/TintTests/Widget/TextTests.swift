@@ -1,8 +1,8 @@
-import XCTest
+import Testing
 @testable import Tint
 
-final class TextTests: XCTestCase {
-    func testSingleLineText() {
+@Suite struct TextTests {
+    @Test func singleLineText() {
         let area = Rect(x: 0, y: 0, width: 10, height: 1)
         var buffer = Buffer(area: area)
         let text = Text("Hello")
@@ -10,7 +10,7 @@ final class TextTests: XCTestCase {
         buffer.assertRow(0, equals: "Hello")
     }
 
-    func testMultiLineText() {
+    @Test func multiLineText() {
         let area = Rect(x: 0, y: 0, width: 10, height: 3)
         var buffer = Buffer(area: area)
         let text = Text("Line 1\nLine 2\nLine 3")
@@ -20,7 +20,7 @@ final class TextTests: XCTestCase {
         buffer.assertRow(2, equals: "Line 3")
     }
 
-    func testCenterAlignment() {
+    @Test func centerAlignment() {
         let area = Rect(x: 0, y: 0, width: 10, height: 1)
         var buffer = Buffer(area: area)
         let text = Text("Hi", alignment: .center)
@@ -30,7 +30,7 @@ final class TextTests: XCTestCase {
         buffer.assertCell(x: 5, y: 0, char: "i")
     }
 
-    func testRightAlignment() {
+    @Test func rightAlignment() {
         let area = Rect(x: 0, y: 0, width: 10, height: 1)
         var buffer = Buffer(area: area)
         let text = Text("Hi", alignment: .right)
@@ -40,15 +40,15 @@ final class TextTests: XCTestCase {
         buffer.assertCell(x: 9, y: 0, char: "i")
     }
 
-    func testTruncation() {
+    @Test func truncation() {
         let area = Rect(x: 0, y: 0, width: 3, height: 1)
         var buffer = Buffer(area: area)
         let text = Text("Hello")
         text.render(area: area, buffer: &buffer)
-        XCTAssertEqual(buffer.textAt(row: 0), "Hel")
+        #expect(buffer.textAt(row: 0) == "Hel")
     }
 
-    func testStyledSpans() {
+    @Test func styledSpans() {
         let area = Rect(x: 0, y: 0, width: 10, height: 1)
         var buffer = Buffer(area: area)
         let line = TextLine([
@@ -57,11 +57,11 @@ final class TextTests: XCTestCase {
         ])
         let text = Text(lines: [line])
         text.render(area: area, buffer: &buffer)
-        XCTAssertEqual(buffer[0, 0].style.fg, .red)
-        XCTAssertEqual(buffer[3, 0].style.fg, .blue)
+        #expect(buffer[0, 0].style.fg == .red)
+        #expect(buffer[3, 0].style.fg == .blue)
     }
 
-    func testEmptyArea() {
+    @Test func emptyArea() {
         let area = Rect(x: 0, y: 0, width: 0, height: 0)
         var buffer = Buffer(area: area)
         let text = Text("Hello")
@@ -69,7 +69,7 @@ final class TextTests: XCTestCase {
         text.render(area: area, buffer: &buffer)
     }
 
-    func testTextClippedVertically() {
+    @Test func textClippedVertically() {
         let area = Rect(x: 0, y: 0, width: 10, height: 1)
         var buffer = Buffer(area: area)
         let text = Text("Line 1\nLine 2\nLine 3")

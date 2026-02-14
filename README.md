@@ -243,6 +243,52 @@ The `Key` enum covers standard terminal input:
 | F-keys | `.f(1)` ... `.f(4)` |
 | Ctrl+C | `.ctrlC` |
 
+## Testing
+
+Tint has two test layers: unit tests (Swift Testing) for isolated component verification and BDD tests ([PickleKit](https://github.com/alleato-llc/pickle-kit)) for behavioral scenarios written in Gherkin.
+
+```bash
+# Run all tests
+swift test
+
+# Run only unit tests
+swift test --filter TintTests
+
+# Run only BDD tests
+swift test --filter TintBDDTests
+
+# Run a single BDD scenario by name
+CUCUMBER_SCENARIOS="Write text to buffer" swift test --filter TintBDDTests
+
+# Generate HTML test report
+PICKLE_REPORT=1 swift test --filter TintBDDTests
+
+# Generate HTML report at a custom path
+PICKLE_REPORT=1 PICKLE_REPORT_PATH=report.html swift test --filter TintBDDTests
+```
+
+### Unit Tests
+
+Unit tests cover core types (Buffer, Cell, Rect), layout constraint resolution, style merging, theme conformance, and individual widget rendering. They live in `Tests/TintTests/` and use Swift Testing with buffer assertion helpers.
+
+### BDD Tests
+
+BDD tests describe widget behavior in human-readable Gherkin feature files. Since widgets are pure functions `(Rect, inout Buffer) -> Void`, testing buffer output IS behavioral testing.
+
+Feature files live in `Features/` at the project root:
+
+| Feature | Scenarios | What it covers |
+|---------|-----------|----------------|
+| `buffer.feature` | 8 | Write, fill, merge, reset, truncation, out-of-bounds |
+| `layout.feature` | 7 | Vertical/horizontal splits, constraints, edge cases |
+| `style_merging.feature` | 5 | Override semantics, boolean OR, defaults |
+| `text_widget.feature` | 6 | Alignment, multi-line, truncation, empty area |
+| `block_widget.feature` | 6 | Border styles, titles, child rendering |
+| `list_widget.feature` | 5 | Items, selection, scrolling, empty list |
+| `table_widget.feature` | 3 | Headers/rows, selection, empty table |
+
+See [docs/testing/BDD.md](docs/testing/BDD.md) for the full testing guide and [CONTRIBUTING.md](CONTRIBUTING.md) for test requirements on contributions.
+
 ## Built with Tint
 
 - **[aux](https://github.com/alleato-llc/aux)** — Terminal music player with library browser, real-time waveform/spectrum visualizers, and multi-format playback via LibAVKit

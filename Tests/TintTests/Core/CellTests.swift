@@ -1,29 +1,29 @@
-import XCTest
+import Testing
 @testable import Tint
 
-final class CellTests: XCTestCase {
-    func testDefaultCell() {
+@Suite struct CellTests {
+    @Test func defaultCell() {
         let cell = Cell()
-        XCTAssertEqual(cell.character, " ")
-        XCTAssertEqual(cell.style, .default)
+        #expect(cell.character == " ")
+        #expect(cell.style == .default)
     }
 
-    func testEmptyCell() {
-        XCTAssertEqual(Cell.empty.character, " ")
-        XCTAssertEqual(Cell.empty.style, .default)
+    @Test func emptyCell() {
+        #expect(Cell.empty.character == " ")
+        #expect(Cell.empty.style == .default)
     }
 
-    func testCellEquality() {
+    @Test func cellEquality() {
         let a = Cell(character: "A", style: Style(fg: .red))
         let b = Cell(character: "A", style: Style(fg: .red))
         let c = Cell(character: "B", style: Style(fg: .red))
-        XCTAssertEqual(a, b)
-        XCTAssertNotEqual(a, c)
+        #expect(a == b)
+        #expect(a != c)
     }
 
-    func testReset() {
+    @Test func reset() {
         var cell = Cell(character: "X", style: Style(fg: .green, bold: true))
         cell.reset()
-        XCTAssertEqual(cell, .empty)
+        #expect(cell == .empty)
     }
 }

@@ -1,63 +1,63 @@
-import XCTest
+import Testing
 @testable import Tint
 
-final class StyleTests: XCTestCase {
-    func testDefaultStyle() {
+@Suite struct StyleTests {
+    @Test func defaultStyle() {
         let style = Style.default
-        XCTAssertEqual(style.fg, .default)
-        XCTAssertEqual(style.bg, .default)
-        XCTAssertFalse(style.bold)
-        XCTAssertFalse(style.italic)
-        XCTAssertFalse(style.underline)
-        XCTAssertFalse(style.dim)
-        XCTAssertFalse(style.reversed)
+        #expect(style.fg == .default)
+        #expect(style.bg == .default)
+        #expect(!style.bold)
+        #expect(!style.italic)
+        #expect(!style.underline)
+        #expect(!style.dim)
+        #expect(!style.reversed)
     }
 
-    func testMerging() {
+    @Test func merging() {
         let base = Style(fg: .red, bold: true)
         let overlay = Style(fg: .blue)
         let merged = base.merging(overlay)
-        XCTAssertEqual(merged.fg, .blue)
-        XCTAssertEqual(merged.bg, .default)
-        XCTAssertTrue(merged.bold)
+        #expect(merged.fg == .blue)
+        #expect(merged.bg == .default)
+        #expect(merged.bold)
     }
 
-    func testMergingDefaultsPreserved() {
+    @Test func mergingDefaultsPreserved() {
         let base = Style(fg: .green, bg: .yellow)
         let overlay = Style() // all defaults
         let merged = base.merging(overlay)
         // .default fg/bg don't override
-        XCTAssertEqual(merged.fg, .green)
-        XCTAssertEqual(merged.bg, .yellow)
+        #expect(merged.fg == .green)
+        #expect(merged.bg == .yellow)
     }
 
-    func testAnsiSequence() {
+    @Test func ansiSequence() {
         let style = Style(fg: .red, bold: true)
         let seq = style.ansiSequence
-        XCTAssertTrue(seq.contains("1")) // bold
-        XCTAssertTrue(seq.contains("31")) // red fg
+        #expect(seq.contains("1")) // bold
+        #expect(seq.contains("31")) // red fg
     }
 
-    func testColorFgCodes() {
-        XCTAssertEqual(Color.default.fgCode, "39")
-        XCTAssertEqual(Color.red.fgCode, "31")
-        XCTAssertEqual(Color.brightCyan.fgCode, "96")
-        XCTAssertEqual(Color.ansi256(42).fgCode, "38;5;42")
-        XCTAssertEqual(Color.rgb(10, 20, 30).fgCode, "38;2;10;20;30")
+    @Test func colorFgCodes() {
+        #expect(Color.default.fgCode == "39")
+        #expect(Color.red.fgCode == "31")
+        #expect(Color.brightCyan.fgCode == "96")
+        #expect(Color.ansi256(42).fgCode == "38;5;42")
+        #expect(Color.rgb(10, 20, 30).fgCode == "38;2;10;20;30")
     }
 
-    func testColorBgCodes() {
-        XCTAssertEqual(Color.default.bgCode, "49")
-        XCTAssertEqual(Color.blue.bgCode, "44")
-        XCTAssertEqual(Color.ansi256(100).bgCode, "48;5;100")
-        XCTAssertEqual(Color.rgb(255, 0, 128).bgCode, "48;2;255;0;128")
+    @Test func colorBgCodes() {
+        #expect(Color.default.bgCode == "49")
+        #expect(Color.blue.bgCode == "44")
+        #expect(Color.ansi256(100).bgCode == "48;5;100")
+        #expect(Color.rgb(255, 0, 128).bgCode == "48;2;255;0;128")
     }
 
-    func testStyleEquality() {
+    @Test func styleEquality() {
         let a = Style(fg: .red, bold: true)
         let b = Style(fg: .red, bold: true)
         let c = Style(fg: .blue, bold: true)
-        XCTAssertEqual(a, b)
-        XCTAssertNotEqual(a, c)
+        #expect(a == b)
+        #expect(a != c)
     }
 }

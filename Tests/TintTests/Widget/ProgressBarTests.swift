@@ -1,8 +1,8 @@
-import XCTest
+import Testing
 @testable import Tint
 
-final class ProgressBarTests: XCTestCase {
-    func testEmptyProgressBar() {
+@Suite struct ProgressBarTests {
+    @Test func emptyProgressBar() {
         let area = Rect(x: 0, y: 0, width: 12, height: 1)
         var buffer = Buffer(area: area)
         let bar = ProgressBar(progress: 0.0)
@@ -15,7 +15,7 @@ final class ProgressBarTests: XCTestCase {
         }
     }
 
-    func testFullProgressBar() {
+    @Test func fullProgressBar() {
         let area = Rect(x: 0, y: 0, width: 12, height: 1)
         var buffer = Buffer(area: area)
         let bar = ProgressBar(progress: 1.0)
@@ -27,7 +27,7 @@ final class ProgressBarTests: XCTestCase {
         }
     }
 
-    func testHalfProgressBar() {
+    @Test func halfProgressBar() {
         let area = Rect(x: 0, y: 0, width: 12, height: 1)
         var buffer = Buffer(area: area)
         let bar = ProgressBar(progress: 0.5)
@@ -41,7 +41,7 @@ final class ProgressBarTests: XCTestCase {
         }
     }
 
-    func testNoBrackets() {
+    @Test func noBrackets() {
         let area = Rect(x: 0, y: 0, width: 10, height: 1)
         var buffer = Buffer(area: area)
         let bar = ProgressBar(progress: 1.0, showBrackets: false)
@@ -52,13 +52,13 @@ final class ProgressBarTests: XCTestCase {
         }
     }
 
-    func testProgressClampedAboveOne() {
+    @Test func progressClampedAboveOne() {
         let bar = ProgressBar(progress: 1.5)
-        XCTAssertEqual(bar.progress, 1.0)
+        #expect(bar.progress == 1.0)
     }
 
-    func testProgressClampedBelowZero() {
+    @Test func progressClampedBelowZero() {
         let bar = ProgressBar(progress: -0.5)
-        XCTAssertEqual(bar.progress, 0.0)
+        #expect(bar.progress == 0.0)
     }
 }
