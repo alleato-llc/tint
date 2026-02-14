@@ -245,49 +245,30 @@ The `Key` enum covers standard terminal input:
 
 ## Testing
 
-Tint has two test layers: unit tests (Swift Testing) for isolated component verification and BDD tests ([PickleKit](https://github.com/alleato-llc/pickle-kit)) for behavioral scenarios written in Gherkin.
+Tint uses [PickleKit](https://github.com/alleato-llc/pickle-kit) (a Swift-native Cucumber/BDD framework) to test widgets through buffer output assertions. Feature files live at the project root in `Features/`:
 
-```bash
-# Run all tests
-swift test
-
-# Run only unit tests
-swift test --filter TintTests
-
-# Run only BDD tests
-swift test --filter TintBDDTests
-
-# Run a single BDD scenario by name
-CUCUMBER_SCENARIOS="Write text to buffer" swift test --filter TintBDDTests
-
-# Generate HTML test report
-PICKLE_REPORT=1 swift test --filter TintBDDTests
-
-# Generate HTML report at a custom path
-PICKLE_REPORT=1 PICKLE_REPORT_PATH=report.html swift test --filter TintBDDTests
+```gherkin
+# Features/block_widget.feature
+Scenario: Child renders inside block
+  Given a buffer of width 10 and height 3
+  When I render a Block with plain border containing text "Hi"
+  Then cell (1, 1) should contain "H"
+  And cell (2, 1) should contain "i"
 ```
 
-### Unit Tests
+Widgets are pure functions `(Rect, inout Buffer) -> Void`, so asserting on buffer content IS behavioral testing — no terminal session needed.
 
-Unit tests cover core types (Buffer, Cell, Rect), layout constraint resolution, style merging, theme conformance, and individual widget rendering. They live in `Tests/TintTests/` and use Swift Testing with buffer assertion helpers.
+```bash
+swift test                        # run all tests
+swift test --filter TintBDDTests  # run only BDD scenarios
+PICKLE_REPORT=1 swift test        # generate HTML report at pickle-report.html
+```
 
-### BDD Tests
+See [docs/testing/BDD.md](docs/testing/BDD.md) for the full testing guide and [docs/testing/PHILOSOPHY.md](docs/testing/PHILOSOPHY.md) for design decisions.
 
-BDD tests describe widget behavior in human-readable Gherkin feature files. Since widgets are pure functions `(Rect, inout Buffer) -> Void`, testing buffer output IS behavioral testing.
+## Contributing
 
-Feature files live in `Features/` at the project root:
-
-| Feature | Scenarios | What it covers |
-|---------|-----------|----------------|
-| `buffer.feature` | 8 | Write, fill, merge, reset, truncation, out-of-bounds |
-| `layout.feature` | 7 | Vertical/horizontal splits, constraints, edge cases |
-| `style_merging.feature` | 5 | Override semantics, boolean OR, defaults |
-| `text_widget.feature` | 6 | Alignment, multi-line, truncation, empty area |
-| `block_widget.feature` | 6 | Border styles, titles, child rendering |
-| `list_widget.feature` | 5 | Items, selection, scrolling, empty list |
-| `table_widget.feature` | 3 | Headers/rows, selection, empty table |
-
-See [docs/testing/BDD.md](docs/testing/BDD.md) for the full testing guide and [CONTRIBUTING.md](CONTRIBUTING.md) for test requirements on contributions.
+See [CONTRIBUTING.md](CONTRIBUTING.md).
 
 ## Built with Tint
 
