@@ -7,6 +7,7 @@ import Glibc
 public final class ANSITerminal: TerminalBackend, @unchecked Sendable {
     private var originalTermios: termios?
     private var previousBuffer: Buffer?
+    private var lastSize: Size?
 
     public init() {}
 
@@ -56,6 +57,14 @@ public final class ANSITerminal: TerminalBackend, @unchecked Sendable {
     public func draw(_ buffer: Buffer) {
         var output = ""
         var lastStyle: Style? = nil
+
+        let currentSize = Size(width: buffer.area.width, height: buffer.area.height)
+        if lastSize != currentSize {
+            // Terminal resized — clear screen and discard stale buffer
+            output += "\u{1b}[2J"
+            previousBuffer = nil
+            lastSize = currentSize
+        }
 
         for row in 0..<buffer.area.height {
             let y = buffer.area.y + row
