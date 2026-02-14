@@ -26,6 +26,7 @@ public struct Table: Widget, Sendable {
     public var headerStyle: Style
     public var highlightStyle: Style
     public var columnSpacing: Int
+    public var horizontalOffset: Int
 
     public init(
         columns: [Column],
@@ -33,7 +34,8 @@ public struct Table: Widget, Sendable {
         selected: Int? = nil,
         headerStyle: Style = Style(bold: true),
         highlightStyle: Style = Style(fg: .black, bg: .white, bold: true),
-        columnSpacing: Int = 1
+        columnSpacing: Int = 1,
+        horizontalOffset: Int = 0
     ) {
         self.columns = columns
         self.rows = rows
@@ -41,6 +43,7 @@ public struct Table: Widget, Sendable {
         self.headerStyle = headerStyle
         self.highlightStyle = highlightStyle
         self.columnSpacing = columnSpacing
+        self.horizontalOffset = horizontalOffset
     }
 
     public func render(area: Rect, buffer: inout Buffer) {
@@ -101,7 +104,11 @@ public struct Table: Widget, Sendable {
         var x = area.x
         for (col, width) in widths.enumerated() {
             guard col < cells.count else { break }
-            let text = String(cells[col].prefix(width))
+            let cellText = cells[col]
+            let shifted = horizontalOffset > 0
+                ? String(cellText.dropFirst(min(horizontalOffset, cellText.count)))
+                : cellText
+            let text = String(shifted.prefix(width))
             buffer.write(text, x: x, y: y, style: style)
             x += width + columnSpacing
         }

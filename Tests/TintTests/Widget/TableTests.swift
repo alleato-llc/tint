@@ -46,6 +46,36 @@ final class TableTests: XCTestCase {
         // Should not crash
     }
 
+    func testHorizontalOffset() {
+        let area = Rect(x: 0, y: 0, width: 20, height: 4)
+        var buffer = Buffer(area: area)
+        let table = Table(
+            columns: [.init("Name", width: .fill)],
+            rows: [.init(["Hello World Long Name"])],
+            horizontalOffset: 6
+        )
+        table.render(area: area, buffer: &buffer)
+        // Header "Name" shifted by 6 = "": too short, gone
+        // Row "Hello World Long Name" shifted by 6 = "World Long Name"
+        let rowText = buffer.textAt(row: 2)
+        XCTAssertTrue(rowText.hasPrefix("World"))
+    }
+
+    func testHorizontalOffsetZero() {
+        let area = Rect(x: 0, y: 0, width: 20, height: 4)
+        var buffer = Buffer(area: area)
+        let table = Table(
+            columns: [.init("Title", width: .fill)],
+            rows: [.init(["Song"])],
+            horizontalOffset: 0
+        )
+        table.render(area: area, buffer: &buffer)
+        let headerText = buffer.textAt(row: 0)
+        XCTAssertTrue(headerText.hasPrefix("Title"))
+        let rowText = buffer.textAt(row: 2)
+        XCTAssertTrue(rowText.hasPrefix("Song"))
+    }
+
     func testTableColumnWidths() {
         let area = Rect(x: 0, y: 0, width: 21, height: 4)
         var buffer = Buffer(area: area)
