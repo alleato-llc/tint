@@ -43,15 +43,14 @@ app.run(render: { area, buffer in
 })
 ```
 
+## Requirements
+
+- macOS 14+
+- Swift 6.2+
+
 ## Architecture
 
-Tint uses an **immediate-mode rendering** model:
-
-1. Your `render` closure is called each frame
-2. You write widgets into a `Buffer` (a 2D grid of styled characters)
-3. The framework diffs and outputs only changed cells to the terminal
-
-State lives in your code — widgets are stateless renderers.
+See [docs/architecture.md](docs/architecture.md) for a detailed design overview covering the rendering pipeline, core types, layout system, widget protocol, and terminal abstraction.
 
 ## Widget Catalog
 
