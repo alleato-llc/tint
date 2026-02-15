@@ -28,6 +28,7 @@ struct TintBDDTests {
             BlockWidgetSteps.self,
             ListWidgetSteps.self,
             TableWidgetSteps.self,
+            InputParsingSteps.self,
         ])
         #expect(result.passed, "Scenario '\(test.description)' failed: \(failureDetails(result))")
     }

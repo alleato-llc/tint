@@ -40,9 +40,13 @@ public final class ANSITerminal: TerminalBackend, @unchecked Sendable {
 
     public func enterAlternateScreen() {
         writeOutput("\u{1b}[?1049h")
+        // Enable SGR mouse mode (scroll wheel events)
+        writeOutput("\u{1b}[?1000h\u{1b}[?1006h")
     }
 
     public func exitAlternateScreen() {
+        // Disable mouse tracking
+        writeOutput("\u{1b}[?1006l\u{1b}[?1000l")
         writeOutput("\u{1b}[?1049l")
     }
 

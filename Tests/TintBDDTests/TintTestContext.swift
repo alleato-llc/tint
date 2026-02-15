@@ -17,6 +17,8 @@ final class TintTestContext: @unchecked Sendable {
     var listItems: [ListWidget.Item] = []
     var tableColumns: [Table.Column] = []
     var tableRows: [Table.Row] = []
+    var inputBytes: [UInt8] = []
+    var parsedKeys: [Key] = []
 
     func reset() {
         buffer = nil
@@ -29,6 +31,8 @@ final class TintTestContext: @unchecked Sendable {
         listItems = []
         tableColumns = []
         tableRows = []
+        inputBytes = []
+        parsedKeys = []
     }
 }
 

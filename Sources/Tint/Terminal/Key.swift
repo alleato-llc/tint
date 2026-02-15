@@ -14,6 +14,8 @@ public enum Key: Equatable, Hashable, Sendable {
     case pageDown
     case delete
     case f(Int)
+    case scrollUp
+    case scrollDown
     case ctrlC
     case unknown
 }

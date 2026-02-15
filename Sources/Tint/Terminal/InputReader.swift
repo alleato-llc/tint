@@ -36,12 +36,12 @@ public final class InputReader: @unchecked Sendable {
         let bytes = Array(buf[0..<n])
         var i = 0
         while i < bytes.count {
-            let key = parseKey(bytes: bytes, index: &i)
+            let key = Self.parseKey(bytes: bytes, index: &i)
             handler(key)
         }
     }
 
-    private func parseKey(bytes: [UInt8], index: inout Int) -> Key {
+    static func parseKey(bytes: [UInt8], index: inout Int) -> Key {
         let b = bytes[index]
         index += 1
 
@@ -58,6 +58,12 @@ public final class InputReader: @unchecked Sendable {
             if bytes[index] == 91 { // [
                 index += 1
                 guard index < bytes.count else { return .escape }
+
+                // SGR mouse: ESC[<button;x;yM or ESC[<button;x;ym
+                if bytes[index] == 60 { // <
+                    index += 1
+                    return Self.parseSGRMouse(bytes: bytes, index: &index)
+                }
 
                 let code = bytes[index]
                 index += 1
@@ -135,6 +141,34 @@ public final class InputReader: @unchecked Sendable {
         if let str = String(bytes: utf8Bytes, encoding: .utf8), let char = str.first {
             return .char(char)
         }
+        return .unknown
+    }
+
+    /// Parse SGR mouse sequence: button;x;yM or button;x;ym
+    /// Called after ESC[< has been consumed.
+    static func parseSGRMouse(bytes: [UInt8], index: inout Int) -> Key {
+        // Read semicolon-delimited numbers until M or m
+        var nums: [Int] = []
+        var current = 0
+        while index < bytes.count {
+            let b = bytes[index]
+            index += 1
+            if b >= 48 && b <= 57 { // 0-9
+                current = current * 10 + Int(b - 48)
+            } else if b == 59 { // ;
+                nums.append(current)
+                current = 0
+            } else if b == 77 || b == 109 { // M or m
+                nums.append(current)
+                break
+            } else {
+                return .unknown
+            }
+        }
+        guard nums.count >= 1 else { return .unknown }
+        let button = nums[0]
+        if button == 64 { return .scrollUp }
+        if button == 65 { return .scrollDown }
         return .unknown
     }
 }
